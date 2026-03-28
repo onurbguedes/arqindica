@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArqIndica — Seu portal de indicação de confiança</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:      #E8622A;
+  --orange-dark: #C44F1A;
+  --orange-light:#F07A45;
+  --orange-pale: #FEF0E9;
+  --navy:        #12192B;
+  --navy-mid:    #1E2C45;
+  --navy-soft:   #2D3F5E;
+  --cream:       #FAF6F1;
+  --cream-dark:  #F2EBE0;
+  --muted:       #6B7A8D;
+  --muted-light: #9DAAB8;
+  --white:       #FFFFFF;
+  --green:       #2E7D52;
+  --gold:        #D4A017;
+  --border:      rgba(18,25,43,.10);
+  --border-light:rgba(18,25,43,.06);
+  --shadow-sm:   0 2px 8px rgba(18,25,43,.07);
+  --shadow-md:   0 8px 28px rgba(18,25,43,.11);
+  --shadow-lg:   0 20px 56px rgba(18,25,43,.15);
+  --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 40px;
+  --font-h: 'Manrope', sans-serif;
+  --font-b: 'Inter', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--cream);color:var(--navy);line-height:1.6;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{max-width:100%}
+
+/* ── UTILS ── */
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.hidden{display:none!important}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r-sm);font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--orange);color:#fff}
+.btn-primary:hover{background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,98,42,.35)}
+.btn-ghost{background:transparent;color:var(--navy-soft);border:1.5px solid var(--border)}
+.btn-ghost:hover{background:var(--cream-dark);border-color:var(--orange);color:var(--orange)}
+.btn-outline{background:transparent;color:var(--orange);border:1.5px solid var(--orange)}
+.btn-outline:hover{background:var(--orange);color:#fff}
+.btn-wa{background:#25D366;color:#fff}
+.btn-wa:hover{background:#1aad53}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy-mid)}
+.btn-sm{padding:8px 16px;font-size:13px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(18,25,43,.96);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1200px;margin:0 auto;padding:0 24px}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--font-h);font-size:22px;font-weight:800;color:#fff;letter-spacing:-.03em}
+.logo-mark{width:34px;height:34px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.logo span{color:var(--orange)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-link{color:rgba(255,255,255,.65);font-size:14px;font-weight:500;cursor:pointer;padding:6px 12px;border-radius:6px;transition:all .2s}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.08)}
+
+/* ── DATA BANNER ── */
+#data-banner{display:none;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;position:fixed;top:64px;left:0;right:0;z-index:90}
+
+/* ── HERO ── */
+.hero{padding:120px 0 80px;background:var(--navy);position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.hero-glow{position:absolute;top:-120px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(232,98,42,.18) 0%,transparent 65%);pointer-events:none}
+.hero-glow2{position:absolute;bottom:-80px;left:-100px;width:360px;height:360px;background:radial-gradient(circle,rgba(232,98,42,.10) 0%,transparent 65%);pointer-events:none}
+.hero-content{position:relative;z-index:1;max-width:680px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(232,98,42,.15);border:1px solid rgba(232,98,42,.35);border-radius:40px;padding:6px 16px;margin-bottom:28px;font-size:13px;font-weight:600;color:var(--orange-light);letter-spacing:.02em}
+.hero-badge-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:var(--font-h);font-size:clamp(36px,5.5vw,64px);font-weight:800;line-height:1.06;letter-spacing:-.04em;color:#fff;margin-bottom:20px}
+.hero h1 em{color:var(--orange);font-style:normal}
+.hero-sub{font-size:18px;color:rgba(255,255,255,.55);margin-bottom:44px;font-weight:400;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.6}
+
+/* ── SEARCH ── */
+.search-wrap{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:var(--r-xl);padding:6px 6px 6px 20px;display:flex;align-items:center;gap:12px;margin-bottom:16px;transition:border-color .2s,box-shadow .2s;max-width:640px;margin-left:auto;margin-right:auto}
+.search-wrap:focus-within{border-color:var(--orange);box-shadow:0 0 0 4px rgba(232,98,42,.15)}
+.search-wrap input{flex:1;border:none;outline:none;background:transparent;font-family:var(--font-b);font-size:15px;color:#fff;min-width:0}
+.search-wrap input::placeholder{color:rgba(255,255,255,.35)}
+.city-chip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border-radius:20px;padding:6px 12px;font-size:13px;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap;cursor:pointer;flex-shrink:0}
+.search-wrap .btn-primary{border-radius:28px;flex-shrink:0}
+
+.hero-stats{display:flex;justify-content:center;gap:48px;margin-top:48px;flex-wrap:wrap}
+.stat-num{font-family:var(--font-h);font-size:30px;font-weight:800;color:#fff;display:block;letter-spacing:-.03em}
+.stat-label{font-size:13px;color:rgba(255,255,255,.45)}
+
+/* ── STRIP ── */
+.strip{background:var(--orange);padding:14px 0}
+.strip-inner{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;align-items:center}
+.strip-item{color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;opacity:.9}
+.strip-item svg{opacity:.8}
+
+/* ── SECTION ── */
+.section{padding:72px 0}
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:36px;gap:16px;flex-wrap:wrap}
+.section-title{font-family:var(--font-h);font-size:30px;font-weight:800;letter-spacing:-.03em;color:var(--navy)}
+.section-link{font-size:14px;color:var(--orange);font-weight:600;cursor:pointer}
+.section-link:hover{text-decoration:underline}
+.section-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.divider{height:1px;background:var(--border-light)}
+.bg-cream{background:var(--cream)}
+.bg-navy{background:var(--navy)}
+.bg-creamed{background:var(--cream-dark)}
+
+/* ── CATEGORY GRID ── */
+.cats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.cat-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-md);padding:20px 14px;text-align:center;cursor:pointer;transition:all .2s}
+.cat-card:hover{border-color:var(--orange);background:var(--orange-pale);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.cat-icon{font-size:26px;display:block;margin-bottom:8px}
+.cat-name{font-size:13px;font-weight:600;color:var(--navy-soft);line-height:1.3}
+.cat-count{font-size:11px;color:var(--muted-light);margin-top:3px}
+
+/* ── PRO CARDS ── */
+.pros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.pro-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:all .25s;position:relative}
+.pro-card:hover{border-color:var(--orange);transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.pro-card-top{height:120px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);display:flex;align-items:center;justify-content:center;font-size:44px;position:relative}
+.verified-badge{position:absolute;top:10px;right:10px;background:var(--green);color:#fff;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:.03em}
+.arch-badge{position:absolute;top:10px;left:10px;background:rgba(232,98,42,.9);color:#fff;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.pro-card-body{padding:18px}
+.pro-cat{font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.pro-name{font-family:var(--font-h);font-size:17px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.2}
+.pro-desc{font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.pro-meta{display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.stars{color:#F59E0B;font-size:12px}
+.rating-num{font-weight:700;font-size:14px;color:var(--navy)}
+.rev-count{font-size:12px;color:var(--muted-light)}
+.recs{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.recs strong{color:var(--orange)}
+.pro-footer{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.pro-loc{font-size:12px;color:var(--muted-light);flex:1;display:flex;align-items:center;gap:4px}
+.price-tag{font-size:11px;font-weight:600;padding:2px 8px;background:var(--cream-dark);border-radius:20px;color:var(--muted)}
+.pro-actions{display:flex;gap:8px}
+.pro-actions .btn{flex:1;justify-content:center;font-size:13px;padding:9px 12px}
+
+/* ── RESULTS PAGE ── */
+.results-header{padding:80px 0 0;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.08)}
+.results-search{padding:24px 0 16px}
+.results-search .search-wrap{max-width:600px;margin:0}
+.filters-row{display:flex;gap:8px;padding:12px 0 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.filters-row::-webkit-scrollbar{display:none}
+.filter-pill{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:40px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);font-size:13px;font-weight:500;color:rgba(255,255,255,.65);cursor:pointer;white-space:nowrap;transition:all .2s}
+.filter-pill:hover{border-color:var(--orange);color:var(--orange-light)}
+.filter-pill.active{background:var(--orange);border-color:var(--orange);color:#fff}
+.results-main{padding:32px 0}
+.results-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.results-count{font-size:15px;color:var(--muted)}
+.results-count strong{color:var(--navy);font-weight:700}
+.sort-select{padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-b);font-size:14px;background:var(--white);color:var(--navy);cursor:pointer;outline:none}
+.sort-select:focus{border-color:var(--orange)}
+.empty-state{text-align:center;padding:64px 0;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:16px}
+
+/* ── PROFESSIONAL PAGE ── */
+.prof-page{padding-top:80px}
+.prof-hero{background:var(--navy);padding:48px 0 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.prof-hero-inner{display:flex;gap:32px;align-items:flex-end;flex-wrap:wrap}
+.prof-avatar{width:96px;height:96px;border-radius:18px;background:var(--navy-mid);overflow:hidden;border:3px solid rgba(255,255,255,.12);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:40px}
+.prof-info{flex:1;min-width:0}
+.prof-name{font-family:var(--font-h);font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-.04em;color:#fff;margin-bottom:10px}
+.prof-meta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:16px}
+.prof-stat{display:flex;align-items:center;gap:6px;font-size:14px;color:rgba(255,255,255,.55)}
+.prof-stat strong{color:#fff}
+.badge-verified{display:inline-flex;align-items:center;gap:5px;background:rgba(46,125,82,.2);border:1px solid rgba(46,125,82,.4);color:#4ade80;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700}
+.badge-arq{display:inline-flex;align-items:center;gap:5px;background:rgba(232,98,42,.2);border:1px solid rgba(232,98,42,.4);color:var(--orange-light);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700}
+.prof-tabs{display:flex;gap:0;margin-top:24px}
+.prof-tab{padding:12px 24px;font-size:14px;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.prof-tab.active{color:#fff;border-bottom-color:var(--orange)}
+.prof-body{padding:40px 0}
+.prof-layout{display:grid;grid-template-columns:1fr 300px;gap:32px}
+@media(max-width:768px){.prof-layout{grid-template-columns:1fr}}
+.prof-section{margin-bottom:32px}
+.prof-section-title{font-family:var(--font-h);font-size:17px;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.info-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:22px;position:sticky;top:84px;box-shadow:var(--shadow-sm)}
+.info-card .btn{width:100%;justify-content:center;margin-bottom:10px}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border-light);font-size:13px;gap:12px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:var(--muted-light);flex-shrink:0}
+.info-val{font-weight:600;color:var(--navy);text-align:right}
+.tags-row{display:flex;flex-wrap:wrap;gap:8px}
+.tag-pill{padding:5px 12px;border-radius:40px;background:var(--cream-dark);font-size:13px;font-weight:500;color:var(--navy-soft);border:1px solid var(--border)}
+.tag-orange{background:var(--orange-pale);color:var(--orange-dark);border-color:rgba(232,98,42,.2)}
+.photos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;border-radius:var(--r-md);overflow:hidden}
+.photo-item{aspect-ratio:1;background:var(--navy-mid);display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;transition:transform .3s}
+.photo-item:hover{transform:scale(1.03)}
+.review-card{background:var(--cream);border-radius:var(--r-md);padding:18px;margin-bottom:14px;border:1px solid var(--border-light)}
+.reviewer-avatar{width:38px;height:38px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+.reviewer-info{flex:1}
+.reviewer-name{font-weight:700;font-size:14px;color:var(--navy)}
+.review-date{font-size:12px;color:var(--muted-light)}
+.review-text{font-size:14px;color:var(--navy-soft);line-height:1.6;margin-top:10px}
+.review-form{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:22px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:13px;font-weight:600;color:var(--navy-soft);display:block;margin-bottom:5px}
+.form-input,.form-select,.form-textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-b);font-size:14px;color:var(--navy);background:var(--cream);outline:none;transition:border-color .2s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--orange);background:#fff}
+.form-textarea{resize:vertical;min-height:90px}
+.star-rating{display:flex;gap:6px;font-size:26px;cursor:pointer}
+.star-rating span{color:var(--border);transition:color .15s}
+.star-rating span.lit,.star-rating span:hover{color:#F59E0B}
+
+/* ── ABOUT SECTION (Home) ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr;gap:32px}}
+.about-text h2{font-family:var(--font-h);font-size:clamp(28px,3.5vw,40px);font-weight:800;letter-spacing:-.04em;color:var(--navy);margin-bottom:16px;line-height:1.1}
+.about-text p{font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.check-list{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.check-item{display:flex;align-items:flex-start;gap:12px;font-size:15px;color:var(--navy-soft)}
+.check-icon{width:22px;height:22px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:12px;color:#fff}
+.diff-cards{display:flex;flex-direction:column;gap:16px}
+.diff-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:24px;transition:all .2s}
+.diff-card:hover{border-color:var(--orange);box-shadow:var(--shadow-md)}
+.diff-card.featured{border-color:var(--orange);background:var(--orange-pale)}
+.diff-card-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.diff-card-label.orange{color:var(--orange)}
+.diff-card-label.muted{color:var(--muted-light)}
+.diff-card h4{font-family:var(--font-h);font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.diff-card p{font-size:14px;color:var(--muted);line-height:1.5}
+
+/* ── TEAM ── */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:640px){.team-grid{grid-template-columns:1fr}}
+.team-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:28px 22px;text-align:center;transition:all .2s}
+.team-card:hover{border-color:var(--orange);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.team-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--orange) 0%,var(--navy) 100%);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:28px;font-weight:800;color:#fff;letter-spacing:-.03em;border:3px solid var(--cream-dark)}
+.team-role{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-bottom:4px}
+.team-name{font-family:var(--font-h);font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.team-bio{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* ── CTA BAND ── */
+.cta-band{background:var(--orange);padding:56px 0;text-align:center}
+.cta-band h2{font-family:var(--font-h);font-size:clamp(26px,4vw,38px);font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.03em;line-height:1.1}
+.cta-band p{color:rgba(255,255,255,.8);font-size:17px;margin-bottom:28px}
+.cta-band .btn{background:#fff;color:var(--orange);font-size:16px;padding:14px 32px;border-radius:var(--r-xl)}
+.cta-band .btn:hover{background:rgba(255,255,255,.9);transform:translateY(-1px)}
+
+/* ── ADMIN ── */
+.admin-page{padding-top:80px}
+.admin-top{background:var(--navy);padding:32px 0}
+.admin-title{font-family:var(--font-h);font-size:26px;font-weight:800;color:#fff;margin-bottom:4px}
+.admin-sub{color:rgba(255,255,255,.45);font-size:14px}
+.admin-nav{display:flex;gap:4px;margin-top:20px}
+.admin-nav-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;border:none;background:transparent}
+.admin-nav-btn.active,.admin-nav-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.admin-body{padding:32px 0}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+.kpi-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-md);padding:22px}
+.kpi-num{font-family:var(--font-h);font-size:34px;font-weight:800;color:var(--orange);letter-spacing:-.04em}
+.kpi-label{font-size:13px;color:var(--muted);margin-top:4px}
+.table-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.data-table{width:100%;border-collapse:collapse;font-size:14px}
+.data-table th{background:var(--cream-dark);padding:11px 15px;text-align:left;font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+.data-table td{padding:13px 15px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--cream)}
+.status-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.s-approved{background:rgba(46,125,82,.12);color:var(--green)}
+.s-pending{background:rgba(212,160,23,.15);color:#92700A}
+.t-actions{display:flex;gap:6px}
+.t-btn{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.t-approve{background:rgba(46,125,82,.1);color:var(--green)}.t-approve:hover{background:var(--green);color:#fff}
+.t-edit{background:var(--cream-dark);color:var(--navy-soft)}.t-edit:hover{background:var(--border)}
+.t-del{background:rgba(232,98,42,.1);color:var(--orange-dark)}.t-del:hover{background:var(--orange);color:#fff}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(18,25,43,.65);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:var(--r-lg);max-width:540px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:transform .3s;box-shadow:var(--shadow-lg)}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:26px 26px 0}
+.modal-title{font-family:var(--font-h);font-size:20px;font-weight:800;letter-spacing:-.03em;color:var(--navy)}
+.modal-close{width:34px;height:34px;border-radius:50%;background:var(--cream-dark);border:none;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:background .2s;color:var(--muted)}
+.modal-close:hover{background:var(--border)}
+.modal-body{padding:20px 26px 26px}
+.modal-footer{padding:0 26px 26px;display:flex;gap:10px}
+.modal-footer .btn{flex:1;justify-content:center}
+
+/* ── TOAST ── */
+.toast-stack{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--navy);color:#fff;padding:13px 18px;border-radius:var(--r-sm);font-size:14px;font-weight:500;box-shadow:var(--shadow-lg);animation:slideIn .3s;display:flex;align-items:center;gap:10px;max-width:300px}
+.toast.success{background:var(--green)}.toast.error{background:var(--orange-dark)}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── FAB ── */
+.fab{position:fixed;bottom:24px;right:24px;z-index:50;width:52px;height:52px;border-radius:50%;background:var(--orange);color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.fab:hover{background:var(--orange-dark);transform:scale(1.1)}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.4);margin-bottom:24px;flex-wrap:wrap}
+.breadcrumb a{color:rgba(255,255,255,.6);cursor:pointer}
+.breadcrumb a:hover{color:var(--orange-light)}
+.breadcrumb-sep{color:rgba(255,255,255,.2)}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:52px 0 32px}
+.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:40px}
+@media(max-width:640px){.footer-inner{grid-template-columns:1fr;gap:24px}}
+.footer-logo{font-family:var(--font-h);font-size:22px;font-weight:800;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.footer-logo span{color:var(--orange)}
+.footer-desc{font-size:14px;line-height:1.6;color:rgba(255,255,255,.4);max-width:280px}
+.footer-col-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px}
+.footer-links{display:flex;flex-direction:column;gap:9px}
+.footer-link{color:rgba(255,255,255,.5);font-size:14px;cursor:pointer;transition:color .2s}
+.footer-link:hover{color:var(--orange-light)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:13px;color:rgba(255,255,255,.3)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .hero{padding:96px 0 56px}
+  .hero-stats{gap:24px}
+  .search-wrap{flex-wrap:wrap}
+  .city-chip{display:none}
+  .nav-right .btn-ghost{display:none}
+  .pros-grid{grid-template-columns:1fr}
+  .cats-grid{grid-template-columns:repeat(3,1fr)}
+  .strip-inner{gap:20px}
+  .team-grid{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- DATA BANNER -->
+<div id="data-banner"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo" onclick="showPage('home')">
+      <div class="logo-mark">⌂</div>
+      Arq<span>Indica</span>
+    </div>
+    <div class="nav-right">
+      <span class="nav-link" onclick="showPage('home')">Home</span>
+      <span class="nav-link" onclick="showPage('results')">Profissionais</span>
+      <span class="nav-link" onclick="showPage('admin')">Admin</span>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modalCadastro')">+ Indicar</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== PAGE: HOME ===================== -->
+<div id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Plataforma de Conexão · Teresina, PI
+        </div>
+        <h1>Seu portal de indicação<br>de <em>confiança!!</em></h1>
+        <p class="hero-sub">Profissionais e fornecedores validados por arquitetos e designers. Transformamos a incerteza da obra na segurança da indicação especializada.</p>
+        <div class="search-wrap">
+          <span style="font-size:18px;flex-shrink:0">🔍</span>
+          <input id="search-input" type="text" placeholder='Busque: "marceneiro", "gesseiro", "vidraceiro"...' onkeydown="if(event.key==='Enter')doSearch()">
+          <div class="city-chip">📍 Teresina</div>
+          <button class="btn btn-primary" onclick="doSearch()">Buscar</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num" id="stat-pros">216</span><span class="stat-label">Profissionais</span></div>
+          <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Membros na rede</span></div>
+          <div class="stat"><span class="stat-num">15</span><span class="stat-label">Categorias</span></div>
+          <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Indicados</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIP -->
+  <div class="strip">
+    <div class="strip-inner">
+      <div class="strip-item">✓ Curadoria humana especializada</div>
+      <div class="strip-item">✓ Chancela técnica de arquitetos</div>
+      <div class="strip-item">✓ Hub de credibilidade</div>
+      <div class="strip-item">✓ Zero anúncios pagos</div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Explore por área</div>
+          <h2 class="section-title">Categorias</h2>
+        </div>
+        <a class="section-link" onclick="filterByCategory('Todos')">Ver todos →</a>
+      </div>
+      <div class="cats-grid" id="cats-grid"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TOP PROS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Mais recomendados</div>
+          <h2 class="section-title">🏆 Mais indicados</h2>
+        </div>
+        <a class="section-link" onclick="showPage('results')">Ver todos →</a>
+      </div>
+      <div class="pros-grid" id="top-pros-grid"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- RECENT -->
+  <section class="section bg-creamed">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Novidades</div>
+          <h2 class="section-title">🆕 Adicionados recentemente</h2>
+        </div>
+        <a class="section-link" onclick="showPage('results')">Ver todos →</a>
+      </div>
+      <div class="pros-grid" id="recent-pros-grid"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT / DIFERENCIAL -->
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <div class="section-label">Nossa solução</div>
+          <h2>Curadoria e<br>Conexão Digital</h2>
+          <p>O ArqIndica é uma plataforma digital (Web/Mobile) que entrega a informação certa, na hora exata.</p>
+          <p>Nós organizamos a rede de profissionais — marceneiros, pintores, vidraceiros — e lojas, todos <strong>exclusivamente indicados por arquitetos</strong>.</p>
+          <div class="check-list">
+            <div class="check-item"><div class="check-icon">✓</div><span>Eliminamos o risco da busca aberta</span></div>
+            <div class="check-item"><div class="check-icon">✓</div><span>Hub de serviços validados e confiança técnica</span></div>
+            <div class="check-item"><div class="check-icon">✓</div><span>Não somos um diretório de anúncios</span></div>
+          </div>
+        </div>
+        <div class="diff-cards">
+          <div class="diff-card">
+            <div class="diff-card-label muted">🔍 Plataformas Genéricas</div>
+            <h4>Google, GetNinjas e similares</h4>
+            <p>Diretórios abertos que focam em quantidade, não qualidade. O risco da contratação permanece alto e a verificação é superficial.</p>
+          </div>
+          <div class="diff-card featured">
+            <div class="diff-card-label orange">👤 ArqIndica</div>
+            <h4>Curadoria Humana Especializada</h4>
+            <p>Cada profissional possui a chancela técnica de um arquiteto. Um hub de credibilidade, não de anúncios.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="section bg-navy">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:40px">
+        <div class="section-label" style="color:var(--orange)">Quem faz acontecer</div>
+        <h2 class="section-title" style="color:#fff">Nossa Equipe</h2>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar">BG</div>
+          <div class="team-role">CEO</div>
+          <div class="team-name">Beatriz Guedes</div>
+          <p class="team-bio">Arquiteta e Urbanista com experiência em gestão e liderança</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">TS</div>
+          <div class="team-role">CMO</div>
+          <div class="team-name">Thamires Sales</div>
+          <p class="team-bio">Design de interiores com experiência em marketing e tráfego digital</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">AR</div>
+          <div class="team-role">CTO</div>
+          <div class="team-name">Acíria Rufino</div>
+          <p class="team-bio">Gestora de projetos atuando em especificação e testes de softwares</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-band">
+    <div class="container">
+      <h2>Conhece um ótimo profissional?</h2>
+      <p>Indique e fortaleça a rede. É gratuito e leva menos de 2 minutos.</p>
+      <button class="btn" onclick="openModal('modalCadastro')">+ Indicar agora</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">⌂ Arq<span>Indica</span></div>
+          <p class="footer-desc">Seu portal de indicação de confiança. Transformamos a incerteza da obra na segurança da indicação especializada.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Navegação</div>
+          <div class="footer-links">
+            <span class="footer-link" onclick="showPage('home')">Home</span>
+            <span class="footer-link" onclick="showPage('results')">Profissionais</span>
+            <span class="footer-link" onclick="openModal('modalCadastro')">Indicar profissional</span>
+            <span class="footer-link" onclick="showPage('admin')">Admin</span>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Categorias</div>
+          <div class="footer-links">
+            <span class="footer-link" onclick="filterByCategory('Marcenaria')">Marcenaria</span>
+            <span class="footer-link" onclick="filterByCategory('Elétrica')">Elétrica</span>
+            <span class="footer-link" onclick="filterByCategory('Gesso e Drywall')">Gesso e Drywall</span>
+            <span class="footer-link" onclick="filterByCategory('Pintura')">Pintura</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 ArqIndica · Teresina, PI</span>
+        <span>"Bora arquitetar esse projeto juntos?"</span>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /page-home -->
+
+
+<!-- ===================== PAGE: RESULTS ===================== -->
+<div id="page-results">
+  <div class="results-header">
+    <div class="container">
+      <div class="results-search">
+        <div class="search-wrap">
+          <span style="font-size:18px;flex-shrink:0">🔍</span>
+          <input id="results-search-input" type="text" placeholder="Buscar profissionais..." onkeydown="if(event.key==='Enter')applyFilters()">
+          <button class="btn btn-primary btn-sm" onclick="applyFilters()">Buscar</button>
+        </div>
+      </div>
+      <div class="filters-row" id="filters-row"></div>
+    </div>
+  </div>
+  <div class="results-main">
+    <div class="container">
+      <div class="results-toolbar">
+        <p class="results-count"><strong id="results-count">0</strong> profissionais encontrados</p>
+        <select class="sort-select" id="sort-select" onchange="applyFilters()">
+          <option value="recs">Mais indicados</option>
+          <option value="rating">Melhor avaliados</option>
+          <option value="name">Nome A→Z</option>
+        </select>
+      </div>
+      <div class="pros-grid" id="results-grid"></div>
+      <div id="results-empty" class="hidden empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3 style="font-family:var(--font-h);font-size:20px;font-weight:800;margin-bottom:8px;color:var(--navy)">Nenhum resultado</h3>
+        <p>Tente outro termo ou <a style="color:var(--orange);cursor:pointer" onclick="openModal('modalCadastro')">indique um profissional</a>.</p>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-results -->
+
+
+<!-- ===================== PAGE: PROFESSIONAL ===================== -->
+<div id="page-professional">
+  <div class="prof-page">
+    <section class="prof-hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a onclick="showPage('home')">Home</a>
+          <span class="breadcrumb-sep">›</span>
+          <a onclick="showPage('results')">Profissionais</a>
+          <span class="breadcrumb-sep">›</span>
+          <span id="prof-breadcrumb-name" style="color:rgba(255,255,255,.7)">—</span>
+        </div>
+        <div class="prof-hero-inner">
+          <div class="prof-avatar" id="prof-avatar">🧑‍🔧</div>
+          <div class="prof-info">
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span class="badge-arq" id="prof-cat-tag">—</span>
+              <span class="badge-verified" id="prof-verified-tag" style="display:none">✓ Verificado</span>
+            </div>
+            <h1 class="prof-name" id="prof-name">—</h1>
+            <div class="prof-meta-row">
+              <div class="prof-stat"><span id="prof-stars">⭐⭐⭐⭐⭐</span>&nbsp;<strong id="prof-rating">—</strong>&nbsp;<span>(<span id="prof-rev-count">0</span> avaliações)</span></div>
+              <div class="prof-stat">👍 <strong id="prof-recs">0</strong> indicações</div>
+              <div class="prof-stat">📍 <span id="prof-loc">—</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="prof-tabs">
+          <div class="prof-tab active" onclick="switchTab('info',this)">Informações</div>
+          <div class="prof-tab" onclick="switchTab('photos',this)">Fotos</div>
+          <div class="prof-tab" onclick="switchTab('reviews',this)">Avaliações</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="prof-body">
+      <div class="container">
+        <div class="prof-layout">
+          <div>
+            <div id="tab-info">
+              <div class="prof-section">
+                <h3 class="prof-section-title">Sobre</h3>
+                <p id="prof-desc" style="font-size:15px;line-height:1.7;color:var(--navy-soft)">—</p>
+              </div>
+              <div class="prof-section" id="prof-tags-section">
+                <h3 class="prof-section-title">Tags</h3>
+                <div class="tags-row" id="prof-tags-row"></div>
+              </div>
+              <div class="prof-section" id="prof-kw-section" style="display:none">
+                <h3 class="prof-section-title">Palavras-chave</h3>
+                <div class="tags-row" id="prof-kw-row"></div>
+              </div>
+            </div>
+            <div id="tab-photos" class="hidden">
+              <div class="prof-section">
+                <h3 class="prof-section-title">Fotos dos trabalhos</h3>
+                <div class="photos-grid" id="prof-photos-grid"></div>
+              </div>
+            </div>
+            <div id="tab-reviews" class="hidden">
+              <div class="prof-section">
+                <h3 class="prof-section-title">Avaliações</h3>
+                <div id="prof-reviews-list"></div>
+                <div class="review-form" style="margin-top:20px">
+                  <h4 style="font-family:var(--font-h);font-size:16px;font-weight:700;margin-bottom:14px;color:var(--navy)">Deixe sua avaliação</h4>
+                  <div class="form-group">
+                    <label class="form-label">Sua nota</label>
+                    <div class="star-rating" id="star-picker">
+                      <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Seu nome</label>
+                    <input class="form-input" id="rev-name" placeholder="Como quer ser identificado">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Comentário</label>
+                    <textarea class="form-textarea" id="rev-comment" placeholder="Conte sua experiência..."></textarea>
+                  </div>
+                  <button class="btn btn-primary" onclick="submitReview()" style="width:100%;justify-content:center">Publicar avaliação</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div>
+            <div class="info-card">
+              <button class="btn btn-wa" id="prof-wa-btn" onclick="openWhatsApp()">💬 Falar no WhatsApp</button>
+              <button class="btn btn-outline" onclick="doRecommend()">👍 Indicar este profissional</button>
+              <div style="margin-top:18px">
+                <div class="info-row"><span class="info-label">📍 Cidade</span><span class="info-val" id="si-city">—</span></div>
+                <div class="info-row"><span class="info-label">🏘️ Bairro</span><span class="info-val" id="si-neigh">—</span></div>
+                <div class="info-row"><span class="info-label">💰 Faixa de preço</span><span class="info-val" id="si-price">—</span></div>
+                <div class="info-row"><span class="info-label">🗺️ Área de atendimento</span><span class="info-val" id="si-area">—</span></div>
+                <div class="info-row"><span class="info-label">📦 Fonte</span><span class="info-val" id="si-source">—</span></div>
+              </div>
+              <div id="si-insta-row" style="margin-top:14px;display:none">
+                <a id="si-insta-link" target="_blank" class="btn btn-ghost" style="width:100%;justify-content:center">📷 Ver Instagram</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-professional -->
+
+
+<!-- ===================== PAGE: ADMIN ===================== -->
+<div id="page-admin">
+  <div class="admin-page">
+    <div class="admin-top">
+      <div class="container">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+          <div>
+            <h1 class="admin-title">⚙️ Área Administrativa</h1>
+            <p class="admin-sub">Gerencie cadastros, avaliações e categorias do ArqIndica</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showPage('home')">← Voltar ao site</button>
+        </div>
+        <div class="admin-nav">
+          <button class="admin-nav-btn active" onclick="adminTab('dashboard',this)">Dashboard</button>
+          <button class="admin-nav-btn" onclick="adminTab('pending',this)">Pendentes</button>
+          <button class="admin-nav-btn" onclick="adminTab('all',this)">Todos</button>
+          <button class="admin-nav-btn" onclick="adminTab('reviews',this)">Comentários</button>
+        </div>
+      </div>
+    </div>
+    <div class="admin-body">
+      <div class="container">
+        <div id="admin-dashboard">
+          <div class="kpi-grid">
+            <div class="kpi-card"><div class="kpi-num">216</div><div class="kpi-label">Profissionais cadastrados</div></div>
+            <div class="kpi-card"><div class="kpi-num" id="kpi-pending">0</div><div class="kpi-label">Aguardando aprovação</div></div>
+            <div class="kpi-card"><div class="kpi-num">500+</div><div class="kpi-label">Membros na rede</div></div>
+            <div class="kpi-card"><div class="kpi-num">15</div><div class="kpi-label">Categorias ativas</div></div>
+          </div>
+          <h3 style="font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:14px;color:var(--navy)">Cadastros recentes</h3>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>Profissional</th><th>Categoria</th><th>Status</th><th>Ações</th></tr></thead><tbody id="admin-recent-tbody"></tbody></table></div>
+        </div>
+        <div id="admin-pending" class="hidden">
+          <h3 style="font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:14px;color:var(--navy)">Pendentes de aprovação</h3>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>Nome</th><th>Categoria</th><th>Cidade</th><th>Telefone</th><th>Ações</th></tr></thead><tbody id="admin-pending-tbody"></tbody></table></div>
+        </div>
+        <div id="admin-all" class="hidden">
+          <h3 style="font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:14px;color:var(--navy)">Todos os profissionais</h3>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>Nome</th><th>Categoria</th><th>Indicações</th><th>Nota</th><th>Status</th><th>Ações</th></tr></thead><tbody id="admin-all-tbody"></tbody></table></div>
+        </div>
+        <div id="admin-reviews" class="hidden">
+          <h3 style="font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:14px;color:var(--navy)">Moderação de comentários</h3>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>Avaliador</th><th>Profissional</th><th>Nota</th><th>Comentário</th><th>Ações</th></tr></thead><tbody id="admin-reviews-tbody"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-admin -->
+
+
+<!-- MODAL: CADASTRO -->
+<div class="modal-overlay" id="modalCadastro" onclick="if(event.target===this)closeModal('modalCadastro')">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Indicar profissional</h2>
+      <button class="modal-close" onclick="closeModal('modalCadastro')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Campos com * são obrigatórios. Sua indicação fortalece a rede!</p>
+      <div class="form-group"><label class="form-label">Nome *</label><input class="form-input" id="cad-name" placeholder="Nome do profissional ou empresa"></div>
+      <div class="form-group"><label class="form-label">Categoria *</label><select class="form-select" id="cad-cat"><option value="">Selecione...</option></select></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><label class="form-label">Cidade *</label><input class="form-input" id="cad-city" value="Teresina"></div>
+        <div class="form-group"><label class="form-label">Bairro</label><input class="form-input" id="cad-neigh" placeholder="Opcional"></div>
+      </div>
+      <div class="form-group"><label class="form-label">WhatsApp *</label><input class="form-input" id="cad-phone" placeholder="(86) 9 9999-9999"></div>
+      <div class="form-group"><label class="form-label">Descrição curta *</label><textarea class="form-textarea" id="cad-desc" style="min-height:72px" placeholder="Descreva o profissional e seus serviços..."></textarea></div>
+      <details style="margin-bottom:8px">
+        <summary style="font-size:14px;font-weight:600;cursor:pointer;color:var(--orange);margin-bottom:10px">+ Informações opcionais</summary>
+        <div style="margin-top:12px">
+          <div class="form-group"><label class="form-label">Instagram ou site</label><input class="form-input" id="cad-insta" placeholder="@perfil ou https://..."></div>
+          <div class="form-group"><label class="form-label">Palavras-chave</label><input class="form-input" id="cad-kw" placeholder="Ex: armários, cozinha planejada, MDF"></div>
+          <div class="form-group"><label class="form-label">Faixa de preço</label><select class="form-select" id="cad-price"><option value="">Não informado</option><option>💰 Econômico</option><option>💰💰 Moderado</option><option>💰💰💰 Premium</option></select></div>
+          <div class="form-group"><label class="form-label">Fonte da indicação</label><input class="form-input" id="cad-source" placeholder="Ex: Grupo WhatsApp ArqIndica"></div>
+        </div>
+      </details>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalCadastro')">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitCadastro()">Enviar indicação ✓</button>
+    </div>
+  </div>
+</div>
+
+<button class="fab" id="fab-btn" onclick="openModal('modalCadastro')" title="Indicar profissional">+</button>
+<div class="toast-stack" id="toast-stack"></div>
+
+<script>
+// ============================================================
+//  GOOGLE SHEETS CONFIG
+// ============================================================
+const SHEETS_CONFIG = {
+  SHEET_ID: '1VNBkmLHw2yRTatoyvQujTWQgBOXJ0WrFutZ_oYDYFWc',
+  SHEET_PROFESSIONALS: 'professionals_legivel',
+  SHEET_CATEGORIES:    'categories',
+  CACHE_TTL: 5 * 60 * 1000,
+};
+const _cache = {};
+
+async function sheetsQuery(sheetName) {
+  const now = Date.now();
+  if (_cache[sheetName] && (now - _cache[sheetName].ts) < SHEETS_CONFIG.CACHE_TTL) return _cache[sheetName].data;
+  const url = `https://docs.google.com/spreadsheets/d/${SHEETS_CONFIG.SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.replace(/^.*?\(/, '').replace(/\);?\s*$/, ''));
+    const cols = json.table.cols.map(c => c.label);
+    const rows = json.table.rows.map(row => {
+      const obj = {};
+      cols.forEach((col, i) => { const c = row.c[i]; obj[col] = c ? (c.v !== null && c.v !== undefined ? c.v : '') : ''; });
+      return obj;
+    });
+    _cache[sheetName] = { ts: now, data: rows };
+    return rows;
+  } catch(e) { console.warn('Sheets fetch falhou:', e); return null; }
+}
+
+function rowToPro(row, index) {
+  const phone = String(row['phone'] || row['CONTATO'] || '').replace(/\D/g,'').replace(/^55/,'');
+  return {
+    id: index + 1,
+    name:            row['name']          || row['NOME']     || '',
+    category:        row['category_name'] || row['SERVIÇO']  || 'Outros',
+    city:            row['city']          || 'Teresina',
+    neighborhood:    row['neighborhood']  || '',
+    phone,
+    desc:            row['description']   || row['MAIS']     || '',
+    instagram:       row['instagram']     || row['INSTAGRAM']|| '',
+    keywords:        String(row['keywords'] || '').split(',').map(k=>k.trim()).filter(Boolean),
+    tags:            [],
+    rating:          parseFloat(row['rating_avg'])           || 0,
+    reviews:         parseInt(row['reviews_count'])          || 0,
+    recommendations: parseInt(row['recommendations_count'])  || 0,
+    verified:        String(row['verified']).toLowerCase() === 'true',
+    price:           row['price_range']   || '',
+    area:            row['service_area']  || 'Teresina',
+    source:          row['source']        || '',
+    photos:          [],
+    status:          row['status']        || 'approved',
+    addedDays:       0,
+  };
+}
+
+function rowToCat(row) {
+  return { name: row['name']||'', icon: row['icon']||'📦', count: parseInt(row['professionals_count'])||0 };
+}
+
+// ── DEMO DATA ──
+const DEMO_CATEGORIES = [
+  {name:'Construção e Reforma',icon:'🏗️',count:22},{name:'Marcenaria',icon:'🪵',count:20},
+  {name:'Móveis e Decoração',icon:'🛋️',count:35},{name:'Vidraçaria e Esquadrias',icon:'🔲',count:9},
+  {name:'Cerâmica e Acabamentos',icon:'🪨',count:21},{name:'Gesso e Drywall',icon:'🧱',count:12},
+  {name:'Elétrica',icon:'⚡',count:12},{name:'Climatização',icon:'❄️',count:6},
+  {name:'Pintura',icon:'🖌️',count:7},{name:'Metalurgia e ACM',icon:'⚙️',count:9},
+  {name:'Paisagismo e Jardinagem',icon:'🌿',count:6},{name:'Piscinas e Lagos',icon:'🏊',count:2},
+  {name:'Arquitetura e Design Digital',icon:'🏛️',count:17},{name:'Comunicação Visual',icon:'🖨️',count:13},
+  {name:'Outros',icon:'📦',count:20},
+];
+const DEMO_PROS = [
+  {id:1,name:'Carlos Marceneiro',category:'Marcenaria',city:'Teresina',neighborhood:'Ininga',phone:'86991234567',desc:'Especialista em móveis planejados e sob medida. Mais de 15 anos de experiência com MDF.',tags:['Rápido','Bom acabamento'],keywords:['armários','MDF'],rating:4.8,reviews:24,recommendations:47,verified:true,price:'💰💰 Moderado',area:'Teresina',source:'Grupo WhatsApp ArqIndica',instagram:'@carlos.marceneiro',photos:[],addedDays:90,status:'approved'},
+  {id:2,name:'Sampaio Eletricista',category:'Elétrica',city:'Teresina',neighborhood:'Dirceu',phone:'86993456789',desc:'Serviços elétricos residenciais e comerciais. Instalação e manutenção.',tags:['Seguro','Rápido'],keywords:['elétrica','fiação'],rating:4.6,reviews:15,recommendations:29,verified:false,price:'💰 Econômico',area:'Zona Sul',source:'Grupo WhatsApp ArqIndica',instagram:'',photos:[],addedDays:7,status:'approved'},
+  {id:3,name:'Maranata Vidros',category:'Vidraçaria e Esquadrias',city:'Teresina',neighborhood:'Centro',phone:'86994567890',desc:'Box para banheiro, espelhos, janelas e portas de vidro. Instalação gratuita.',tags:['Preço justo','Pontual'],keywords:['vidro','box'],rating:4.5,reviews:18,recommendations:33,verified:true,price:'💰💰 Moderado',area:'Toda Teresina',source:'Grupo WhatsApp ArqIndica',instagram:'@maranatavidros',photos:[],addedDays:14,status:'approved'},
+];
+
+let CATEGORIES    = [...DEMO_CATEGORIES];
+let professionals = [...DEMO_PROS];
+let pendingPros   = [];
+let currentProfId = null, currentRating = 0;
+let activeFilters = {category:'Todos',search:'',sort:'recs'};
+
+// ── LOAD FROM SHEETS ──
+async function loadData() {
+  setBanner('loading');
+  try {
+    const [prosRows, catRows] = await Promise.all([
+      sheetsQuery(SHEETS_CONFIG.SHEET_PROFESSIONALS),
+      sheetsQuery(SHEETS_CONFIG.SHEET_CATEGORIES),
+    ]);
+    if (prosRows && prosRows.length > 0) {
+      professionals = prosRows.filter(r => r['name']||r['NOME']).map(rowToPro);
+      document.getElementById('stat-pros').textContent = professionals.length;
+    }
+    if (catRows && catRows.length > 0) CATEGORIES = catRows.filter(r=>r['name']).map(rowToCat);
+    setBanner('live');
+    renderHome();
+  } catch(e) { setBanner('error'); }
+}
+
+function setBanner(type) {
+  const b = document.getElementById('data-banner');
+  const cfg = {
+    loading:{bg:'rgba(18,25,43,.9)',color:'rgba(255,255,255,.7)',text:'⏳ Conectando com a planilha...'},
+    live:   {bg:'#2E7D52',color:'#fff',text:`✅ ${professionals.length} profissionais carregados ao vivo do Google Sheets`},
+    error:  {bg:'#C44F1A',color:'#fff',text:'⚠️ Falha ao conectar. Exibindo dados de demonstração.'},
+  }[type];
+  if (!cfg) return;
+  Object.assign(b.style,{display:'block',background:cfg.bg,color:cfg.color,padding:'8px 16px',fontSize:'13px',fontWeight:'600',textAlign:'center',position:'fixed',top:'64px',left:'0',right:'0',zIndex:'90'});
+  b.textContent = cfg.text;
+  if (type==='live') setTimeout(()=>{b.style.opacity='0';b.style.transition='.5s';setTimeout(()=>b.style.display='none',500)},3000);
+}
+
+// ── NAV ──
+function showPage(page) {
+  ['home','results','professional','admin'].forEach(p => document.getElementById('page-'+p).style.display='none');
+  document.getElementById('page-'+page).style.display='block';
+  document.getElementById('fab-btn').style.display = page==='admin'?'none':'flex';
+  window.scrollTo(0,0);
+  if(page==='home') renderHome();
+  if(page==='results') renderResults();
+  if(page==='admin') renderAdmin();
+}
+function showProfessional(id) {
+  currentProfId = id;
+  const p = professionals.find(x=>x.id===id); if(!p) return;
+  ['home','results','professional','admin'].forEach(pg=>document.getElementById('page-'+pg).style.display='none');
+  document.getElementById('page-professional').style.display='block';
+  renderProfPage(p); window.scrollTo(0,0);
+}
+
+// ── RENDER HOME ──
+function renderHome() {
+  const cg = document.getElementById('cats-grid');
+  cg.innerHTML = CATEGORIES.map(c=>`
+    <div class="cat-card" onclick="filterByCategory('${c.name}')">
+      <span class="cat-icon">${c.icon}</span>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-count">${c.count} profissionais</div>
+    </div>`).join('');
+  const sorted = [...professionals].sort((a,b)=>b.recommendations-a.recommendations).slice(0,3);
+  document.getElementById('top-pros-grid').innerHTML = sorted.map(proCard).join('');
+  const recent = [...professionals].sort((a,b)=>a.addedDays-b.addedDays).slice(0,3);
+  document.getElementById('recent-pros-grid').innerHTML = recent.map(proCard).join('');
+  const sel = document.getElementById('cad-cat');
+  sel.innerHTML = '<option value="">Selecione...</option>'+CATEGORIES.map(c=>`<option value="${c.name}">${c.icon} ${c.name}</option>`).join('');
+}
+
+// ── PRO CARD ──
+function proCard(p) {
+  const cat = CATEGORIES.find(c=>c.name===p.category);
+  const icon = cat ? cat.icon : '📦';
+  const stars = '★'.repeat(Math.round(p.rating||0))+'☆'.repeat(5-Math.round(p.rating||0));
+  const desc = p.desc ? (p.desc.length>80?p.desc.substring(0,80)+'...':p.desc) : 'Profissional indicado pela rede ArqIndica.';
+  return `
+  <div class="pro-card" onclick="showProfessional(${p.id})">
+    <div class="pro-card-top">
+      ${p.verified?'<span class="verified-badge">✓ Verificado</span>':''}
+      <span class="arch-badge">ArqIndica</span>
+      <span style="font-size:44px">${icon}</span>
+    </div>
+    <div class="pro-card-body">
+      <div class="pro-cat">${p.category}</div>
+      <div class="pro-name">${p.name}</div>
+      <div class="pro-desc">${desc}</div>
+      <div class="pro-meta">
+        <div><span class="stars">${stars}</span> <span class="rating-num">${p.rating||'—'}</span> <span class="rev-count">(${p.reviews||0})</span></div>
+        <div class="recs">👍 <strong>${p.recommendations||0}</strong></div>
+      </div>
+      <div class="pro-footer">
+        <div class="pro-loc">📍 ${p.neighborhood?p.neighborhood+', ':''}${p.city}</div>
+        ${p.price?`<span class="price-tag">${p.price.split(' ')[0]}</span>`:''}
+      </div>
+      <div class="pro-actions">
+        <button class="btn btn-wa" onclick="event.stopPropagation();waOpen('${p.phone}','${p.name}')">💬 WhatsApp</button>
+        <button class="btn btn-outline" onclick="event.stopPropagation();showProfessional(${p.id})">Ver perfil</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── SEARCH ──
+function doSearch() {
+  const q = document.getElementById('search-input').value.trim();
+  activeFilters.search = q; activeFilters.category = 'Todos';
+  showPage('results');
+  document.getElementById('results-search-input').value = q;
+}
+function filterByCategory(cat) {
+  activeFilters.category = cat; activeFilters.search = '';
+  showPage('results');
+}
+function renderResults() {
+  const fr = document.getElementById('filters-row');
+  fr.innerHTML = ['Todos',...CATEGORIES.map(c=>c.name)].map(cat=>`
+    <div class="filter-pill ${activeFilters.category===cat?'active':''}" onclick="setFilter('${cat}')">
+      ${cat==='Todos'?'🌐 ':''} ${cat}
+    </div>`).join('');
+  if(activeFilters.search) document.getElementById('results-search-input').value = activeFilters.search;
+  applyFilters();
+}
+function setFilter(cat) { activeFilters.category = cat; renderResults(); }
+function applyFilters() {
+  const q = (document.getElementById('results-search-input').value||'').toLowerCase();
+  const sort = document.getElementById('sort-select').value;
+  activeFilters.search = q;
+  let res = professionals.filter(p=>{
+    const mc = activeFilters.category==='Todos'||p.category===activeFilters.category;
+    const ms = !q||p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)||(p.keywords||[]).some(k=>k.toLowerCase().includes(q));
+    return mc&&ms&&p.status==='approved';
+  });
+  if(sort==='recs') res.sort((a,b)=>b.recommendations-a.recommendations);
+  else if(sort==='rating') res.sort((a,b)=>b.rating-a.rating);
+  else res.sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById('results-count').textContent = res.length;
+  const grid = document.getElementById('results-grid');
+  const empty = document.getElementById('results-empty');
+  if(res.length===0){grid.innerHTML='';empty.classList.remove('hidden')}
+  else{empty.classList.add('hidden');grid.innerHTML=res.map(proCard).join('')}
+}
+
+// ── PROF PAGE ──
+function renderProfPage(p) {
+  const G = s=>document.getElementById(s);
+  const cat = CATEGORIES.find(c=>c.name===p.category);
+  G('prof-breadcrumb-name').textContent = p.name;
+  G('prof-avatar').textContent = cat?cat.icon:'🧑‍🔧';
+  G('prof-cat-tag').textContent = p.category;
+  G('prof-name').textContent = p.name;
+  G('prof-stars').textContent = '⭐'.repeat(Math.round(p.rating||0));
+  G('prof-rating').textContent = p.rating||'—';
+  G('prof-rev-count').textContent = p.reviews||0;
+  G('prof-recs').textContent = p.recommendations||0;
+  G('prof-loc').textContent = `${p.neighborhood?p.neighborhood+', ':''}${p.city}`;
+  G('prof-desc').textContent = p.desc||'Profissional indicado pela rede ArqIndica.';
+  G('si-city').textContent = p.city||'—';
+  G('si-neigh').textContent = p.neighborhood||'—';
+  G('si-price').textContent = p.price||'—';
+  G('si-area').textContent = p.area||'—';
+  G('si-source').textContent = p.source||'—';
+  G('prof-verified-tag').style.display = p.verified?'inline-flex':'none';
+  if(p.instagram){G('si-insta-row').style.display='block';G('si-insta-link').textContent=`📷 ${p.instagram}`;G('si-insta-link').href=p.instagram.startsWith('http')?p.instagram:`https://instagram.com/${p.instagram.replace('@','')}`;}else{G('si-insta-row').style.display='none'}
+  G('prof-tags-row').innerHTML = (p.tags||[]).map(t=>`<span class="tag-pill">${t}</span>`).join('');
+  if(p.keywords&&p.keywords.length){G('prof-kw-section').style.display='block';G('prof-kw-row').innerHTML=p.keywords.map(k=>`<span class="tag-pill tag-orange">#${k}</span>`).join('')}else{G('prof-kw-section').style.display='none'}
+  const phIcon = cat?cat.icon:'🏗️';
+  G('prof-photos-grid').innerHTML = Array(6).fill(phIcon).map(i=>`<div class="photo-item">${i}</div>`).join('');
+  G('prof-reviews-list').innerHTML = p.reviews>0?[
+    {n:'Maria Silva',r:5,d:'Mar 2025',t:'Excelente profissional! Trabalho impecável e prazo cumprido.'},
+    {n:'João Mendes',r:4,d:'Fev 2025',t:'Muito caprichoso no acabamento. Recomendo!'},
+  ].map(rv=>`<div class="review-card"><div style="display:flex;gap:10px;align-items:center;margin-bottom:8px"><div class="reviewer-avatar">${rv.n[0]}</div><div class="reviewer-info"><div class="reviewer-name">${rv.n}</div><div class="review-date">${'★'.repeat(rv.r)} · ${rv.d}</div></div></div><p class="review-text">${rv.t}</p></div>`).join(''):'<p style="color:var(--muted);font-size:14px">Ainda sem avaliações. Seja o primeiro!</p>';
+  switchTab('info', document.querySelector('.prof-tab'));
+  currentRating=0; updateStars(0);
+}
+function switchTab(tab,el){
+  document.querySelectorAll('.prof-tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  ['info','photos','reviews'].forEach(t=>{const e=document.getElementById('tab-'+t);if(e)e.classList.toggle('hidden',t!==tab)});
+}
+function openWhatsApp(){const p=professionals.find(x=>x.id===currentProfId);if(p)waOpen(p.phone,p.name)}
+function waOpen(phone,name){window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(`Olá, ${name}! Vi seu perfil no ArqIndica e gostaria de mais informações.`)}`,'_blank')}
+function doRecommend(){const p=professionals.find(x=>x.id===currentProfId);if(!p)return;p.recommendations++;document.getElementById('prof-recs').textContent=p.recommendations;showToast('success',`👍 Obrigado! Você indicou ${p.name}.`)}
+function setRating(n){currentRating=n;updateStars(n)}
+function updateStars(n){document.querySelectorAll('#star-picker span').forEach((s,i)=>s.classList.toggle('lit',i<n))}
+function submitReview(){
+  const name=document.getElementById('rev-name').value.trim(),comment=document.getElementById('rev-comment').value.trim();
+  if(!name||!comment||!currentRating){showToast('error','Preencha nome, nota e comentário.');return}
+  const p=professionals.find(x=>x.id===currentProfId);if(p)p.reviews++;
+  showToast('success','Avaliação enviada! Obrigado.');
+  document.getElementById('rev-name').value='';document.getElementById('rev-comment').value='';currentRating=0;updateStars(0);
+}
+
+// ── CADASTRO ──
+function submitCadastro(){
+  const name=document.getElementById('cad-name').value.trim(),cat=document.getElementById('cad-cat').value,city=document.getElementById('cad-city').value.trim(),phone=document.getElementById('cad-phone').value.trim(),desc=document.getElementById('cad-desc').value.trim();
+  if(!name||!cat||!city||!phone||!desc){showToast('error','Preencha todos os campos obrigatórios (*).');return}
+  const p={id:Date.now(),name,category:cat,city,neighborhood:document.getElementById('cad-neigh').value.trim(),phone:phone.replace(/\D/g,''),desc,instagram:document.getElementById('cad-insta').value.trim(),keywords:(document.getElementById('cad-kw').value||'').split(',').map(k=>k.trim()).filter(Boolean),price:document.getElementById('cad-price').value,source:document.getElementById('cad-source').value.trim()||'Indicação via site',rating:0,reviews:0,recommendations:0,verified:false,tags:[],photos:[],area:city,addedDays:0,status:'pending'};
+  pendingPros.push(p);
+  closeModal('modalCadastro');
+  showToast('success','✓ Indicação enviada! Será analisada em breve.');
+  ['cad-name','cad-neigh','cad-phone','cad-desc','cad-insta','cad-kw','cad-source'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cad-cat').value='';document.getElementById('cad-price').value='';document.getElementById('cad-city').value='Teresina';
+  document.getElementById('kpi-pending').textContent = pendingPros.length;
+}
+
+// ── ADMIN ──
+function renderAdmin(){
+  document.getElementById('kpi-pending').textContent = pendingPros.length;
+  const tbody = document.getElementById('admin-recent-tbody');
+  const rows = [...professionals].slice(0,8);
+  tbody.innerHTML = rows.map(p=>`<tr><td><strong>${p.name}</strong></td><td>${p.category}</td><td><span class="status-badge s-approved">Aprovado</span></td><td><div class="t-actions"><button class="t-btn t-edit">Editar</button><button class="t-btn t-del" onclick="delPro(${p.id})">Remover</button></div></td></tr>`).join('');
+  const pt = document.getElementById('admin-pending-tbody');
+  pt.innerHTML = pendingPros.length===0?'<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted)">Nenhum cadastro pendente 🎉</td></tr>':pendingPros.map(p=>`<tr><td><strong>${p.name}</strong></td><td>${p.category}</td><td>${p.city}</td><td>${p.phone}</td><td><div class="t-actions"><button class="t-btn t-approve" onclick="approvePro(${p.id})">✓ Aprovar</button><button class="t-btn t-del" onclick="rejectPro(${p.id})">✕ Rejeitar</button></div></td></tr>`).join('');
+  document.getElementById('admin-all-tbody').innerHTML = professionals.map(p=>`<tr><td><strong>${p.name}</strong></td><td>${p.category}</td><td style="color:var(--orange);font-weight:700">👍 ${p.recommendations||0}</td><td>⭐ ${p.rating||0}</td><td><span class="status-badge s-approved">Aprovado</span></td><td><div class="t-actions"><button class="t-btn t-edit">Editar</button><button class="t-btn t-del" onclick="delPro(${p.id})">Remover</button></div></td></tr>`).join('');
+  document.getElementById('admin-reviews-tbody').innerHTML = `<tr><td>Maria Silva</td><td>Carlos Marceneiro</td><td>⭐⭐⭐⭐⭐</td><td style="font-size:13px">Excelente profissional!</td><td><div class="t-actions"><button class="t-btn t-approve">✓ Manter</button><button class="t-btn t-del">✕ Remover</button></div></td></tr>`;
+}
+function adminTab(tab,btn){
+  document.querySelectorAll('.admin-nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  ['dashboard','pending','all','reviews'].forEach(t=>document.getElementById('admin-'+t).classList.toggle('hidden',t!==tab));
+}
+function approvePro(id){const i=pendingPros.findIndex(p=>p.id===id);if(i===-1)return;const p=pendingPros.splice(i,1)[0];p.status='approved';professionals.push(p);renderAdmin();showToast('success',`✓ ${p.name} aprovado!`)}
+function rejectPro(id){const i=pendingPros.findIndex(p=>p.id===id);if(i===-1)return;const p=pendingPros.splice(i,1)[0];renderAdmin();showToast('error',`${p.name} rejeitado.`)}
+function delPro(id){if(!confirm('Remover?'))return;const i=professionals.findIndex(p=>p.id===id);if(i===-1)return;const p=professionals.splice(i,1)[0];renderAdmin();showToast('error',`${p.name} removido.`)}
+
+// ── MODAL / TOAST ──
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
+function showToast(type,msg){const s=document.getElementById('toast-stack');const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<span>${msg}</span>`;s.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(20px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300)},3500)}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', async()=>{
+  showPage('home');
+  await loadData();
+});
+</script>
+</body>
+</html>
