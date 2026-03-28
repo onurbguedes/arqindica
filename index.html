@@ -327,79 +327,63 @@ footer{background:var(--navy);padding:52px 0 32px}
   .about-grid{grid-template-columns:1fr}
 }
 </style>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
 
 <!-- ===================== LOGIN PAGE ===================== -->
-<div id="page-login" style="
-  position:fixed;inset:0;z-index:1000;
-  background:var(--navy);
-  display:flex;align-items:center;justify-content:center;
-  padding:24px;
-">
-  <div style="
-    background:var(--white);border-radius:var(--r-lg);
-    max-width:420px;width:100%;padding:48px 40px;
-    text-align:center;box-shadow:var(--shadow-lg);
-    position:relative;overflow:hidden;
-  ">
-    <!-- orange top bar -->
+<div id="page-login" style="position:fixed;inset:0;z-index:1000;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:24px;">
+  <div style="background:var(--white);border-radius:var(--r-lg);max-width:420px;width:100%;padding:48px 40px;text-align:center;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
     <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--orange)"></div>
-
-    <!-- Logo -->
     <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px">
       <div style="width:44px;height:44px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px">⌂</div>
       <span style="font-family:var(--font-h);font-size:26px;font-weight:800;color:var(--navy);letter-spacing:-.03em">Arq<span style="color:var(--orange)">Indica</span></span>
     </div>
-
     <h2 style="font-family:var(--font-h);font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px;letter-spacing:-.03em">Acesso restrito</h2>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.5">Faça login com sua conta Google autorizada para acessar a plataforma ArqIndica.</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.5">Faça login com sua conta Google para acessar a plataforma ArqIndica.</p>
 
-    <!-- Google Sign In button -->
-    <div id="g_id_onload"
-      data-client_id="11239928702-d8sq6635rrc7dqh6s0bca7elgtkun7vo.apps.googleusercontent.com"
-      data-callback="handleGoogleLogin"
-      data-auto_prompt="false">
-    </div>
-    <div style="display:flex;justify-content:center">
-      <div class="g_id_signin"
-        data-type="standard"
-        data-size="large"
-        data-theme="outline"
-        data-text="signin_with"
-        data-shape="rectangular"
-        data-logo_alignment="left"
-        data-width="280">
-      </div>
+    <!-- Botão custom que chama o Google via popup -->
+    <div id="login-btn-wrap">
+      <button onclick="startGoogleLogin()" style="
+        display:inline-flex;align-items:center;gap:12px;
+        padding:12px 24px;border-radius:8px;
+        border:1.5px solid #dadce0;background:#fff;
+        font-family:var(--font-b);font-size:15px;font-weight:600;
+        color:#3c4043;cursor:pointer;width:100%;justify-content:center;
+        box-shadow:0 1px 3px rgba(0,0,0,.12);transition:box-shadow .2s;
+      " onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.2)'"
+         onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,.12)'">
+        <svg width="20" height="20" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Entrar com Google
+      </button>
     </div>
 
     <!-- Estado: verificando -->
     <div id="login-checking" style="display:none;margin-top:20px;padding:16px;text-align:center">
-      <div style="font-size:28px;margin-bottom:8px;animation:spin 1s linear infinite;display:inline-block">⏳</div>
+      <div style="font-size:28px;margin-bottom:8px;display:inline-block">⏳</div>
       <p style="font-size:14px;color:var(--muted)">Verificando sua conta...</p>
     </div>
 
-    <!-- Estado: aguardando aprovação -->
+    <!-- Estado: pendente -->
     <div id="login-pending" style="display:none;margin-top:20px;padding:20px;background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.3);border-radius:12px;text-align:left">
-      <div style="font-size:22px;margin-bottom:8px">⏳</div>
-      <p style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px">Solicitação enviada!</p>
-      <p style="font-size:13px;color:var(--muted);line-height:1.5">Sua conta foi registrada e está aguardando aprovação da equipe ArqIndica. Você receberá acesso assim que um administrador aprovar sua solicitação.</p>
-      <button onclick="logout()" style="margin-top:16px;padding:8px 16px;border-radius:8px;border:1.5px solid var(--border);background:transparent;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer">← Usar outra conta</button>
+      <p style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px">⏳ Solicitação enviada!</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.5">Sua conta está aguardando aprovação da equipe ArqIndica.</p>
+      <button onclick="resetLogin()" style="margin-top:14px;padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:transparent;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer">← Usar outra conta</button>
     </div>
 
     <!-- Estado: erro -->
     <div id="login-error" style="display:none;margin-top:20px;padding:12px 16px;background:rgba(232,98,42,.1);border:1px solid rgba(232,98,42,.3);border-radius:8px;font-size:13px;color:var(--orange-dark)">
-      ⛔ Erro ao verificar conta. Tente novamente.
+      ⛔ <span id="login-error-msg">Erro ao verificar conta. Tente novamente.</span>
     </div>
 
-    <p style="font-size:12px;color:var(--muted-light);margin-top:28px">Apenas contas autorizadas pela equipe ArqIndica podem acessar.</p>
+    <p style="font-size:12px;color:var(--muted-light);margin-top:28px">Apenas contas autorizadas pela equipe ArqIndica.</p>
   </div>
 </div>
-
-<style>
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
 
 <!-- DATA BANNER -->
 <div id="data-banner"></div>
@@ -864,48 +848,98 @@ footer{background:var(--navy);padding:52px 0 32px}
 //  AUTH — GOOGLE LOGIN COM APROVAÇÃO
 // ============================================================
 
-// Emails que são admins (sempre aprovados automaticamente)
-const ADMIN_EMAILS = [
-  'beatriz.guedesg@gmail.com',
-  // adicione outros admins aqui
-];
+// ============================================================
+//  AUTH — GOOGLE LOGIN COM APROVAÇÃO
+// ============================================================
 
-// Sheet onde ficam os usuários aprovados
-// Crie uma aba chamada "users" no seu Google Sheets com colunas:
-// email | name | status | requested_at | approved_at
+const CLIENT_ID = '11239928702-d8sq6635rrc7dqh6s0bca7elgtkun7vo.apps.googleusercontent.com';
+const ADMIN_EMAILS = ['beatriz.guedesg@gmail.com'];
 const SHEET_USERS = 'users';
 
 let currentUser = null;
-let approvedUsers = []; // cache dos aprovados
+let approvedUsers = [];
+let googleAuthReady = false;
 
-async function loadApprovedUsers() {
-  try {
-    const rows = await sheetsQuery(SHEET_USERS);
-    if (rows) approvedUsers = rows.filter(r => r.status === 'approved').map(r => r.email.toLowerCase().trim());
-  } catch(e) { approvedUsers = []; }
+// Inicia o login via popup (mais confiável que o botão GSI nativo)
+function startGoogleLogin() {
+  if (!googleAuthReady) {
+    showLoginError('Google ainda carregando, aguarde um segundo e tente novamente.');
+    return;
+  }
+  google.accounts.id.prompt((notification) => {
+    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+      // Fallback: abre via OAuth popup manual
+      openOAuthPopup();
+    }
+  });
 }
 
-async function handleGoogleLogin(response) {
-  const payload = JSON.parse(atob(response.credential.split('.')[1]));
-  const email = payload.email.toLowerCase().trim();
-  const name  = payload.name;
-  const pic   = payload.picture;
+function openOAuthPopup() {
+  const params = new URLSearchParams({
+    client_id: CLIENT_ID,
+    redirect_uri: 'https://onurbguedes.github.io/arqindica',
+    response_type: 'token id_token',
+    scope: 'openid email profile',
+    nonce: Math.random().toString(36).slice(2),
+    prompt: 'select_account',
+  });
+  const popup = window.open(
+    'https://accounts.google.com/o/oauth2/v2/auth?' + params,
+    'google-login',
+    'width=500,height=600,left=' + (screen.width/2 - 250) + ',top=' + (screen.height/2 - 300)
+  );
+  // Escuta mensagem do popup (se usar redirect para a própria página)
+  const timer = setInterval(() => {
+    if (popup && popup.closed) {
+      clearInterval(timer);
+      // Tenta pegar o token da URL se houve redirect
+      checkPopupResult();
+    }
+  }, 500);
+}
 
+function checkPopupResult() {
+  // Verifica se sessionStorage foi populado pelo redirect
+  const saved = sessionStorage.getItem('arqindica_user');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+    showUserBadge(currentUser.name, currentUser.pic, currentUser.role);
+    document.getElementById('page-login').style.display = 'none';
+    showPage('home');
+    loadData();
+  }
+}
+
+// Callback chamado pelo Google GSI (método declarativo)
+async function handleGoogleLogin(response) {
+  try {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    await processLogin(payload.email, payload.name, payload.picture);
+  } catch(e) {
+    showLoginError('Erro ao processar login. Tente novamente.');
+  }
+}
+
+// Processo central de login
+async function processLogin(email, name, pic) {
+  email = email.toLowerCase().trim();
   showLoginState('checking');
 
-  // Admin sempre entra
-  if (ADMIN_EMAILS.includes(email)) {
+  // Admin entra direto
+  if (ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email)) {
     grantAccess({ email, name, pic, role: 'admin' });
     return;
   }
 
-  // Busca lista de aprovados na planilha
-  await loadApprovedUsers();
+  // Verifica aprovados na planilha
+  try {
+    const rows = await sheetsQuery(SHEET_USERS);
+    if (rows) approvedUsers = rows.filter(r => String(r.status).toLowerCase() === 'approved').map(r => String(r.email).toLowerCase().trim());
+  } catch(e) { approvedUsers = []; }
 
   if (approvedUsers.includes(email)) {
     grantAccess({ email, name, pic, role: 'user' });
   } else {
-    // Não aprovado — registra solicitação e mostra tela de espera
     await registerRequest(email, name, pic);
     showLoginState('pending');
   }
@@ -921,31 +955,30 @@ function grantAccess(user) {
 }
 
 async function registerRequest(email, name, pic) {
-  // Salva solicitação no Apps Script (Web App) do Google Sheets
-  // Se não tiver o Apps Script configurado, salva no localStorage como fallback
   try {
     const existing = JSON.parse(localStorage.getItem('arqindica_requests') || '[]');
-    const already  = existing.find(r => r.email === email);
-    if (!already) {
-      existing.push({
-        email, name, pic,
-        status: 'pending',
-        requested_at: new Date().toISOString(),
-      });
+    if (!existing.find(r => r.email === email)) {
+      existing.push({ email, name, pic, status: 'pending', requested_at: new Date().toISOString() });
       localStorage.setItem('arqindica_requests', JSON.stringify(existing));
     }
   } catch(e) {}
 }
 
 function showLoginState(state) {
-  const checking = document.getElementById('login-checking');
-  const pending  = document.getElementById('login-pending');
-  const error    = document.getElementById('login-error');
-  const gBtn     = document.querySelector('.g_id_signin');
-  [checking, pending, error].forEach(el => { if(el) el.style.display = 'none'; });
-  if (state === 'checking' && checking) { checking.style.display = 'block'; if(gBtn) gBtn.style.display='none'; }
-  if (state === 'pending'  && pending)  { pending.style.display  = 'block'; if(gBtn) gBtn.style.display='none'; }
-  if (state === 'error'    && error)    { error.style.display    = 'block'; }
+  document.getElementById('login-btn-wrap').style.display    = state === 'idle'     ? 'block' : 'none';
+  document.getElementById('login-checking').style.display   = state === 'checking'  ? 'block' : 'none';
+  document.getElementById('login-pending').style.display    = state === 'pending'   ? 'block' : 'none';
+  document.getElementById('login-error').style.display      = state === 'error'     ? 'block' : 'none';
+}
+
+function showLoginError(msg) {
+  document.getElementById('login-error-msg').textContent = msg;
+  showLoginState('error');
+}
+
+function resetLogin() {
+  showLoginState('idle');
+  if(window.google) google.accounts.id.disableAutoSelect();
 }
 
 function showUserBadge(name, pic, role) {
@@ -957,14 +990,12 @@ function showUserBadge(name, pic, role) {
   badge.style.cssText = 'display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 10px;border-radius:40px;border:1.5px solid rgba(255,255,255,.15);transition:all .2s';
   badge.onmouseover = () => badge.style.background = 'rgba(255,255,255,.08)';
   badge.onmouseout  = () => badge.style.background = 'transparent';
-  badge.onclick = () => { if(confirm(`Sair da conta ${name}?`)) logout(); };
+  badge.onclick = () => { if(confirm('Sair da conta ' + name + '?')) logout(); };
   const roleTag = role === 'admin' ? '<span style="font-size:10px;background:var(--orange);color:#fff;padding:1px 6px;border-radius:10px;margin-left:2px">admin</span>' : '';
-  badge.innerHTML = `
-    ${pic ? `<img src="${pic}" style="width:26px;height:26px;border-radius:50%;border:2px solid var(--orange)">` : ''}
-    <span style="font-size:13px;font-weight:600;color:rgba(255,255,255,.8);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name.split(' ')[0]}</span>
-    ${roleTag}
-    <span style="font-size:11px;color:rgba(255,255,255,.3)">Sair</span>
-  `;
+  badge.innerHTML = (pic ? '<img src="' + pic + '" style="width:26px;height:26px;border-radius:50%;border:2px solid var(--orange)">' : '')
+    + '<span style="font-size:13px;font-weight:600;color:rgba(255,255,255,.8);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + name.split(' ')[0] + '</span>'
+    + roleTag
+    + '<span style="font-size:11px;color:rgba(255,255,255,.3)">Sair</span>';
   nav.insertBefore(badge, nav.firstChild);
 }
 
@@ -972,12 +1003,7 @@ function logout() {
   sessionStorage.removeItem('arqindica_user');
   currentUser = null;
   document.getElementById('page-login').style.display = 'flex';
-  // Reset login UI
-  const gBtn = document.querySelector('.g_id_signin');
-  if(gBtn) gBtn.style.display = 'flex';
-  ['login-checking','login-pending','login-error'].forEach(id => {
-    const el = document.getElementById(id); if(el) el.style.display = 'none';
-  });
+  showLoginState('idle');
   ['home','results','professional','admin'].forEach(p => document.getElementById('page-'+p).style.display='none');
   const badge = document.getElementById('user-badge');
   if (badge) badge.remove();
@@ -987,29 +1013,28 @@ function logout() {
 function checkSession() {
   const saved = sessionStorage.getItem('arqindica_user');
   if (saved) {
-    currentUser = JSON.parse(saved);
-    showUserBadge(currentUser.name, currentUser.pic, currentUser.role);
-    document.getElementById('page-login').style.display = 'none';
-    return true;
+    try {
+      currentUser = JSON.parse(saved);
+      showUserBadge(currentUser.name, currentUser.pic, currentUser.role);
+      document.getElementById('page-login').style.display = 'none';
+      return true;
+    } catch(e) { sessionStorage.removeItem('arqindica_user'); }
   }
   return false;
 }
 
-// Carrega solicitações pendentes para o painel admin
 function getPendingRequests() {
-  try {
-    return JSON.parse(localStorage.getItem('arqindica_requests') || '[]').filter(r => r.status === 'pending');
-  } catch(e) { return []; }
+  try { return JSON.parse(localStorage.getItem('arqindica_requests') || '[]').filter(r => r.status === 'pending'); }
+  catch(e) { return []; }
 }
 
 function approveRequest(email) {
   try {
     const reqs = JSON.parse(localStorage.getItem('arqindica_requests') || '[]');
-    const req  = reqs.find(r => r.email === email);
+    const req = reqs.find(r => r.email === email);
     if (req) req.status = 'approved';
     localStorage.setItem('arqindica_requests', JSON.stringify(reqs));
-    // Instrução para admin adicionar manualmente na aba users do Sheets
-    showToast('success', `✓ ${email} aprovado! Adicione na aba "users" da planilha.`);
+    showToast('success', '✓ ' + email + ' aprovado! Adicione na aba "users" da planilha com status = approved.');
     renderAdmin();
   } catch(e) {}
 }
@@ -1020,9 +1045,21 @@ function rejectRequest(email) {
     const i = reqs.findIndex(r => r.email === email);
     if (i > -1) reqs.splice(i, 1);
     localStorage.setItem('arqindica_requests', JSON.stringify(reqs));
-    showToast('error', `${email} rejeitado.`);
+    showToast('error', email + ' rejeitado.');
     renderAdmin();
   } catch(e) {}
+}
+
+// Inicializa o Google Identity Services
+function initGoogleAuth() {
+  if (!window.google) { setTimeout(initGoogleAuth, 300); return; }
+  google.accounts.id.initialize({
+    client_id: CLIENT_ID,
+    callback: handleGoogleLogin,
+    auto_select: false,
+    cancel_on_tap_outside: true,
+  });
+  googleAuthReady = true;
 }
 
 // ============================================================
@@ -1422,18 +1459,21 @@ async function forceRefresh() {
 }
 
 // ── INIT ──
-window.addEventListener('DOMContentLoaded', async()=>{
-  // Mostra login por padrão — esconde o site
+window.addEventListener('DOMContentLoaded', async () => {
+  // Esconde todas as páginas — mostra só o login
   ['home','results','professional','admin'].forEach(p => {
-    document.getElementById('page-'+p).style.display='none';
+    document.getElementById('page-'+p).style.display = 'none';
   });
 
-  // Verifica se já tem sessão ativa (mesmo após F5)
+  // Inicia o Google Auth
+  initGoogleAuth();
+
+  // Verifica sessão existente
   if (checkSession()) {
     showPage('home');
     await loadData();
   }
-  // Se não, a tela de login já está visível esperando o Google callback
+  // Se não tem sessão, a tela de login está visível
 });
 </script>
 </body>
