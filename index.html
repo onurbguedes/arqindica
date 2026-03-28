@@ -344,6 +344,7 @@ footer{background:var(--navy);padding:52px 0 32px}
       <span class="nav-link" onclick="showPage('home')">Home</span>
       <span class="nav-link" onclick="showPage('results')">Profissionais</span>
       <span class="nav-link" onclick="showPage('admin')">Admin</span>
+      <button class="btn btn-ghost btn-sm" id="refresh-btn" onclick="forceRefresh()" title="Sincronizar com planilha">↻</button>
       <button class="btn btn-primary btn-sm" onclick="openModal('modalCadastro')">+ Indicar</button>
     </div>
   </div>
@@ -783,28 +784,67 @@ const SHEETS_CONFIG = {
   SHEET_ID: '1VNBkmLHw2yRTatoyvQujTWQgBOXJ0WrFutZ_oYDYFWc',
   SHEET_PROFESSIONALS: 'professionals_legivel',
   SHEET_CATEGORIES:    'categories',
-  CACHE_TTL: 5 * 60 * 1000,
+  CACHE_TTL: 30 * 1000,
 };
 const _cache = {};
 
 async function sheetsQuery(sheetName) {
   const now = Date.now();
   if (_cache[sheetName] && (now - _cache[sheetName].ts) < SHEETS_CONFIG.CACHE_TTL) return _cache[sheetName].data;
-  const url = `https://docs.google.com/spreadsheets/d/${SHEETS_CONFIG.SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+
+  const base = `https://docs.google.com/spreadsheets/d/${SHEETS_CONFIG.SHEET_ID}/gviz/tq`;
+  const urlJSON = `${base}?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  const urlCSV  = `${base}?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+
+  // Tentativa 1 — JSON (mais rico, funciona em hosting)
   try {
-    const res = await fetch(url);
-    const text = await res.text();
-    const json = JSON.parse(text.replace(/^.*?\(/, '').replace(/\);?\s*$/, ''));
-    const cols = json.table.cols.map(c => c.label);
-    const rows = json.table.rows.map(row => {
-      const obj = {};
-      cols.forEach((col, i) => { const c = row.c[i]; obj[col] = c ? (c.v !== null && c.v !== undefined ? c.v : '') : ''; });
-      return obj;
-    });
-    _cache[sheetName] = { ts: now, data: rows };
-    return rows;
-  } catch(e) { console.warn('Sheets fetch falhou:', e); return null; }
+    const res = await fetch(urlJSON);
+    if (res.ok) {
+      const text = await res.text();
+      const clean = text.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, '');
+      const json = JSON.parse(clean);
+      const cols = json.table.cols.map(c => c.label || c.id);
+      const rows = (json.table.rows || []).map(row => {
+        const obj = {};
+        cols.forEach((col, i) => {
+          const c = row.c ? row.c[i] : null;
+          obj[col] = c && c.v !== null && c.v !== undefined ? String(c.v) : '';
+        });
+        return obj;
+      }).filter(r => Object.values(r).some(v => v !== ''));
+      _cache[sheetName] = { ts: now, data: rows };
+      return rows;
+    }
+  } catch(e) { console.warn('JSON fetch falhou:', e.message); }
+
+  // Tentativa 2 — CSV (funciona mesmo abrindo como arquivo local)
+  try {
+    const res = await fetch(urlCSV);
+    if (res.ok) {
+      const text = await res.text();
+      const lines = text.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+      const rows = lines.slice(1).map(line => {
+        const vals = [];
+        let cur = '', inQ = false;
+        for (const ch of line) {
+          if (ch === '"') { inQ = !inQ; }
+          else if (ch === ',' && !inQ) { vals.push(cur); cur = ''; }
+          else { cur += ch; }
+        }
+        vals.push(cur);
+        const obj = {};
+        headers.forEach((h, i) => { obj[h] = (vals[i] || '').trim(); });
+        return obj;
+      }).filter(r => Object.values(r).some(v => v !== ''));
+      _cache[sheetName] = { ts: now, data: rows };
+      return rows;
+    }
+  } catch(e) { console.warn('CSV fetch falhou:', e.message); }
+
+  return null;
 }
+
 
 function rowToPro(row, index) {
   const phone = String(row['phone'] || row['CONTATO'] || '').replace(/\D/g,'').replace(/^55/,'');
@@ -881,8 +921,8 @@ function setBanner(type) {
   const b = document.getElementById('data-banner');
   const cfg = {
     loading:{bg:'rgba(18,25,43,.9)',color:'rgba(255,255,255,.7)',text:'⏳ Conectando com a planilha...'},
-    live:   {bg:'#2E7D52',color:'#fff',text:`✅ ${professionals.length} profissionais carregados ao vivo do Google Sheets`},
-    error:  {bg:'#C44F1A',color:'#fff',text:'⚠️ Falha ao conectar. Exibindo dados de demonstração.'},
+    live:   {bg:'#2E7D52',color:'#fff',text:`✅ ${professionals.length} profissionais carregados do Google Sheets · atualiza a cada 5min`},
+    error:  {bg:'#C44F1A',color:'#fff',text:'⚠️ Não foi possível conectar ao Google Sheets. Verifique se a planilha está pública (Compartilhar → Qualquer pessoa com o link → Leitor).'},
   }[type];
   if (!cfg) return;
   Object.assign(b.style,{display:'block',background:cfg.bg,color:cfg.color,padding:'8px 16px',fontSize:'13px',fontWeight:'600',textAlign:'center',position:'fixed',top:'64px',left:'0',right:'0',zIndex:'90'});
@@ -1084,6 +1124,21 @@ function delPro(id){if(!confirm('Remover?'))return;const i=professionals.findInd
 function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
 function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
 function showToast(type,msg){const s=document.getElementById('toast-stack');const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<span>${msg}</span>`;s.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(20px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300)},3500)}
+
+// ── FORCE REFRESH ──
+async function forceRefresh() {
+  const btn = document.getElementById('refresh-btn');
+  btn.textContent = '⏳';
+  btn.disabled = true;
+  // Limpa cache para forçar rebusca
+  Object.keys(_cache).forEach(k => delete _cache[k]);
+  await loadData();
+  renderHome();
+  // Se estiver na página de resultados, atualiza também
+  if (document.getElementById('page-results').style.display !== 'none') renderResults();
+  btn.textContent = '↻';
+  btn.disabled = false;
+}
 
 // ── INIT ──
 window.addEventListener('DOMContentLoaded', async()=>{
